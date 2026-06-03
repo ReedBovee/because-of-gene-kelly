@@ -801,10 +801,10 @@ window.addEventListener('touchend',e=>{
   if(e.changedTouches.length>0){
     const tx=e.changedTouches[0].clientX,ty=e.changedTouches[0].clientY;
     const dist=Math.hypot(tx-_touchStartX,ty-_touchStartY);
-    if(dist<15){
+    if(dist<10){
       const rect=canvas.getBoundingClientRect();
       const mx=(tx-rect.left)*(W/rect.width),my=(ty-rect.top)*(W/rect.height);
-      let closest=-1,cd=120;
+      let closest=-1,cd=80;
       for(let i=0;i<voices.length;i++){
         const v=voices[i];const{x,y,z}=ll2xyz(v.lat,v.lng);
         if(z<0.06)continue;const p=proj(x,y,z);
