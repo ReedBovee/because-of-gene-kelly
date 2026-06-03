@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- BOGK-20260603190337-15Vx4LMOIdxc0xlxhVBpAqQxFeyXoqvC64TxYxxzg3bVABxdrPWbgCGOjYUXHH0ZTcGI5vC9ybv4DG8fpW4J64ajCUtcv4ZLWpIR -->
 <html>
 <head>
 <meta charset="UTF-8">
@@ -19,7 +18,7 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
 .hdr-su{font-family:'Cinzel',serif;font-size:clamp(8px,1.4vw,12px);letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-top:.8rem}
 .hdr-ru{width:288px;height:.5px;background:rgba(200,169,110,0.375);margin:.8rem auto}
 .stage{display:block;padding:1.8rem 0 0;}
-.gwrap{position:relative;width:45.9%;margin:0 auto;}
+.gwrap{position:relative;width:45.9%;margin:0 auto;display:flex;flex-direction:column;align-items:center;}
 #gc{display:block;border-radius:50%;cursor:grab;width:100%;aspect-ratio:1/1;height:auto}
 #gc:active{cursor:grabbing}
 .gr{display:none}
@@ -110,7 +109,7 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
 @media (max-width:768px){
   body{overflow-x:hidden}
   .stage{padding:0}
-  .gwrap{width:92%!important;margin:1rem auto!important}
+  .gwrap{width:92%!important;margin:1rem auto!important;display:flex;flex-direction:column;align-items:center;}
   .sp{flex-direction:column;align-items:center;gap:1rem;padding:1rem}
   .sr{justify-content:center;flex-wrap:wrap}
   .sb{min-width:80px}
@@ -131,7 +130,7 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
   #adminPanel{width:95%!important;max-height:85vh!important}
   .arow{padding:10px 8px!important;font-size:13px!important}
   #admCloseBtn,#admDelBtn,#admExportBtn,#admImportLabel{padding:8px 12px!important;font-size:10px!important}
-  .glbl{font-size:9px;letter-spacing:.25em}
+  .glbl{font-size:9px;letter-spacing:.1em;white-space:normal;text-align:center;width:100%;padding:0}
   .row{flex-wrap:wrap}
   #sby{flex:1;min-width:120px}
   #sinp{flex:1;min-width:100px}
@@ -141,7 +140,7 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
 <script>
 // Direct REST API calls to Supabase — no SDK needed
 const SB_URL = 'https://uqzlzkawghgkjsowqjnd.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxemx6a2F3Z2hna2pzb3dxam5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MzMwMDYsImV4cCI6MjA5NjAwOTAwNn0.PSEY932CTd_19F4LsWmf2rgPKLcjJCaSRDClDOIPgr4';
+const SB_KEY = 'sb_publishable_82l0PSdxy5LwxSm-GXt-6Q_ZTiAig1Z';
 
 function sbHeaders(){
   return {
