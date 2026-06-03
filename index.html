@@ -802,7 +802,10 @@ canvas.addEventListener('touchend',e=>{
     const dist=Math.hypot(tx-_touchStartX,ty-_touchStartY);
     if(dist<25){
       const rect=canvas.getBoundingClientRect();
-      const mx=(tx-rect.left)*(W/rect.width),my=(ty-rect.top)*(W/rect.height);
+      // Map touch coords (CSS pixels) to canvas coordinate space
+      const scaleX=canvas.width/rect.width;
+      const scaleY=canvas.height/rect.height;
+      const mx=(tx-rect.left)*scaleX,my=(ty-rect.top)*scaleY;
       let closest=-1,cd=80;
       for(let i=0;i<voices.length;i++){
         const v=voices[i];const{x,y,z}=ll2xyz(v.lat,v.lng);
