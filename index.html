@@ -24,7 +24,7 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
 .gr{display:none}
 .gr2{display:none}
 @keyframes rp{0%,100%{opacity:.22}50%{opacity:.72}}
-.glbl{text-align:center;margin-top:1.8rem;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+.glbl{text-align:center;margin-top:1.8rem;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;white-space:nowrap;width:100%;display:block}
 .sp{width:100%;max-width:740px;margin:1.875rem auto 0;padding:2rem 2rem 0.8rem;display:flex;flex-direction:row;align-items:flex-start;gap:2.5rem;border-top:.5px solid rgba(200,169,110,0.4);justify-content:space-between}
 .sr{display:flex;flex-direction:row;gap:.8rem;flex-shrink:0}
 .sb{flex:1;background:var(--white-faint);border:.5px solid var(--border);border-radius:6px;padding:.65rem;text-align:center}
@@ -130,7 +130,7 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
   #adminPanel{width:95%!important;max-height:85vh!important}
   .arow{padding:10px 8px!important;font-size:13px!important}
   #admCloseBtn,#admDelBtn,#admExportBtn,#admImportLabel{padding:8px 12px!important;font-size:10px!important}
-  .glbl{font-size:9px;letter-spacing:.1em;white-space:normal;text-align:center;width:100%;padding:0}
+  .glbl{font-size:8px;letter-spacing:.08em;white-space:normal !important;text-align:center !important;width:100% !important;display:block !important;margin-left:0 !important;margin-right:0 !important;padding:0 !important;position:static !important}
   .row{flex-wrap:wrap}
   #sby{flex:1;min-width:120px}
   #sinp{flex:1;min-width:100px}
@@ -197,6 +197,24 @@ async function deleteFromSupabase(first, last){
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
   } catch(e){ console.warn('Supabase delete failed:', e.message||e); }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+// EmailJS configuration
+emailjs.init('y4WzpOBnGHaKRVFE5');
+
+function sendThankYouEmail(first, email) {
+  if(!email) return; // skip if no email provided
+  emailjs.send('service_7rfvvkc', 'template_h9lfqys', {
+    first_name: first,
+    email: email
+  }).then(function() {
+    console.log('Thank you email sent to', email);
+  }, function(error) {
+    console.warn('Email failed:', error);
+  });
 }
 </script>
 </head>
@@ -1157,6 +1175,7 @@ document.getElementById('subb').onclick=async()=>{
   const nv={first,last,city,state,country,passion,middle,lat:coords[0],lng:coords[1],pi:first[0]+last[0],photoURL};
   voices.push(nv);
   saveToSupabase(nv); // Save to Supabase cloud
+  sendThankYouEmail(first, email); // Send thank-you email
   // Save photo to IndexedDB separately, don't bloat localStorage
   if(photoURL){
     savePhoto(photoKey(nv), photoURL).catch(e=>console.warn('Photo save failed:',e));
