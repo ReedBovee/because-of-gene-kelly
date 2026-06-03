@@ -801,7 +801,7 @@ window.addEventListener('touchend',e=>{
   if(e.changedTouches.length>0){
     const tx=e.changedTouches[0].clientX,ty=e.changedTouches[0].clientY;
     const dist=Math.hypot(tx-_touchStartX,ty-_touchStartY);
-    if(dist<10){
+    if(dist<25){
       const rect=canvas.getBoundingClientRect();
       const mx=(tx-rect.left)*(W/rect.width),my=(ty-rect.top)*(W/rect.height);
       let closest=-1,cd=80;
