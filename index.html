@@ -199,11 +199,11 @@ async function deleteFromSupabase(first, last){
   } catch(e){ console.warn('Supabase delete failed:', e.message||e); }
 }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 <script>
 // EmailJS configuration
-emailjs.init('y4WzpOBnGHaKRVFE5');
+(function(){ emailjs.init("y4WzpOBnGHaKRVFE5"); })();
 
 function sendThankYouEmail(first, email) {
   if(!email) return; // skip if no email provided
@@ -236,7 +236,7 @@ function sendThankYouEmail(first, email) {
   <div class="gwrap">
     <div class="gr"></div><div class="gr gr2"></div>
     <canvas id="gc" width="420" height="420"></canvas>
-    <div class="glbl">Drag to explore &middot; Click a light to discover</div>
+    <div style="width:100%;text-align:center;"><div class="glbl" style="display:inline-block;margin:0 auto;">Drag to explore &middot; Click a light to discover</div></div>
   </div>
 </div>
 
