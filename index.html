@@ -130,7 +130,8 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
   #adminPanel{width:95%!important;max-height:85vh!important}
   .arow{padding:10px 8px!important;font-size:13px!important}
   #admCloseBtn,#admDelBtn,#admExportBtn,#admImportLabel{padding:8px 12px!important;font-size:10px!important}
-  .glbl{font-size:8px;letter-spacing:.08em;white-space:normal !important;text-align:center !important;width:100% !important;display:block !important;margin-left:0 !important;margin-right:0 !important;padding:0 !important;position:static !important}
+  .glbl{font-size:8px;letter-spacing:.08em;white-space:normal !important;}
+  #glblwrap{position:fixed;bottom:auto;left:0;right:0;width:100%;text-align:center;z-index:10;pointer-events:none;margin-top:0}
   .row{flex-wrap:wrap}
   #sby{flex:1;min-width:120px}
   #sinp{flex:1;min-width:100px}
@@ -238,7 +239,7 @@ function sendThankYouEmail(first, email) {
     <canvas id="gc" width="420" height="420"></canvas>
   </div>
 </div>
-<div style="width:100vw;position:relative;left:50%;transform:translateX(-50%);text-align:center;margin-top:0.5rem;"><span class="glbl" style="white-space:normal;display:inline;">Drag to explore &middot; Click a light to discover</span></div>
+<div id="glblwrap" style="text-align:center;margin-top:0.5rem;"><span class="glbl" style="white-space:normal;display:inline;">Drag to explore &middot; Click a light to discover</span></div>
 
 <div class="sp">
   <div class="sr" style="padding-top:1.29rem">
@@ -800,10 +801,10 @@ window.addEventListener('touchend',e=>{
   if(e.changedTouches.length>0){
     const tx=e.changedTouches[0].clientX,ty=e.changedTouches[0].clientY;
     const dist=Math.hypot(tx-_touchStartX,ty-_touchStartY);
-    if(dist<10){
+    if(dist<15){
       const rect=canvas.getBoundingClientRect();
       const mx=(tx-rect.left)*(W/rect.width),my=(ty-rect.top)*(W/rect.height);
-      let closest=-1,cd=60;
+      let closest=-1,cd=120;
       for(let i=0;i<voices.length;i++){
         const v=voices[i];const{x,y,z}=ll2xyz(v.lat,v.lng);
         if(z<0.06)continue;const p=proj(x,y,z);
