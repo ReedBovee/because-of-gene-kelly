@@ -804,13 +804,16 @@ window.addEventListener('touchend',e=>{
     if(dist<25){
       const rect=canvas.getBoundingClientRect();
       const mx=(tx-rect.left)*(W/rect.width),my=(ty-rect.top)*(W/rect.height);
+      console.log('TAP detected at canvas coords:',mx,my,'voices:',voices.length,'W:',W,'rect:',rect.width,rect.height);
       let closest=-1,cd=80;
       for(let i=0;i<voices.length;i++){
         const v=voices[i];const{x,y,z}=ll2xyz(v.lat,v.lng);
         if(z<0.06)continue;const p=proj(x,y,z);
         const d=Math.hypot(p.px-mx,p.py-my);
+        console.log('Voice',i,v.first,v.last,'proj:',p.px,p.py,'dist:',d);
         if(d<cd){cd=d;closest=i;}
       }
+      console.log('Closest:',closest);
       if(closest>=0)showPop(closest);
     }
   }
