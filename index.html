@@ -209,7 +209,8 @@ function sendThankYouEmail(first, email) {
   if(!email) return; // skip if no email provided
   emailjs.send('service_7rfvvkc', 'template_h9lfqys', {
     first_name: first,
-    email: email
+    email: email,
+    to_email: email
   }).then(function() {
     console.log('Thank you email sent to', email);
   }, function(error) {
