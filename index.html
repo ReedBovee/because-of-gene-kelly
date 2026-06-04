@@ -631,17 +631,19 @@ const CITIES=[
 
 function ll2xyz(lat,lng){
   if(!isFinite(lat)||!isFinite(lng)){return{x:0,y:0,z:-1};}
-  // Convert lat/lng to world XYZ matching GLSL rotation (uses -rotY)
+  // World coordinates of geographic point
   const phi=(90-lat)*Math.PI/180;
   const lngRad=lng*Math.PI/180;
   const wx=Math.sin(phi)*Math.cos(lngRad);
   const wy=Math.cos(phi);
   const wz=Math.sin(phi)*Math.sin(lngRad);
+  // Apply inverse of GLSL rotation (M^T where M uses cos(-rotY),sin(-rotY))
+  // cy=cos(-rotY), sy=sin(-rotY)
   const cy=Math.cos(-rotY),sy=Math.sin(-rotY);
-  const vx= cy*wx + sy*wz;
-  const vy= wy;
-  const vz= -sy*wx + cy*wz;
-  return{x:vx,y:vy,z:vz};
+  // screen_x = cy*wx - sy*wz
+  // screen_y = wy
+  // screen_z = sy*wx + cy*wz  (positive = front/visible)
+  return{x:cy*wx-sy*wz, y:wy, z:sy*wx+cy*wz};
 }
 function proj(x,y,z){return{px:CX+x*R,py:CY-y*R};}
 
@@ -938,7 +940,7 @@ function showPop(i){
     },0);
   }
   // Spin globe to face this person (shortest arc)
-  const targetRotY=Math.PI/2 - v.lng*Math.PI/180;
+  const targetRotY=v.lng*Math.PI/180 - Math.PI/2;
   const diff=((targetRotY-rotY+Math.PI*3)%(Math.PI*2))-Math.PI;
   rotY+=diff;
   velY=0;
