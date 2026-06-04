@@ -1401,6 +1401,7 @@ function admDel(){
   if(i < 0 || i >= voices.length) return;
   if(SEED.some(function(s){ return s.first===voices[i].first && s.last===voices[i].last; })) return;
   var delVoice = voices[i];
+  deleteFromSupabase(delVoice.first, delVoice.last); // remove from cloud DB so it's gone for all visitors
   deletePhoto(photoKey(delVoice));
   voices.splice(i, 1);
   saveVoices();
