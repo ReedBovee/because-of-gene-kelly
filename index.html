@@ -631,7 +631,6 @@ const CITIES=[
 
 function ll2xyz(lat,lng){
   if(!isFinite(lat)||!isFinite(lng)){return{x:0,y:0,z:-1};}
-  lng = lng + 39; // push bad coords behind globe
   // Convert lat/lng to unrotated world XYZ
   const phi=(90-lat)*Math.PI/180;
   const lngRad=lng*Math.PI/180;
