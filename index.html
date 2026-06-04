@@ -131,7 +131,7 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
   .arow{padding:10px 8px!important;font-size:13px!important}
   #admCloseBtn,#admDelBtn,#admExportBtn,#admImportLabel{padding:8px 12px!important;font-size:10px!important}
   .glbl{font-size:8px;letter-spacing:.08em;white-space:normal !important;}
-  #glblwrap{position:fixed;bottom:auto;left:0;right:0;width:100%;text-align:center;z-index:10;pointer-events:none;margin-top:0}
+  #glblwrap{position:static;width:100%;text-align:center;display:block;}
   .row{flex-wrap:wrap}
   #sby{flex:1;min-width:120px}
   #sinp{flex:1;min-width:100px}
@@ -239,7 +239,7 @@ function sendThankYouEmail(first, email) {
     <canvas id="gc" width="420" height="420"></canvas>
   </div>
 </div>
-<div id="glblwrap" style="text-align:center;margin-top:0.5rem;"><span class="glbl" style="white-space:normal;display:inline;">Drag to explore &middot; Click a light to discover</span></div>
+<div id="glblwrap" style="width:100%;text-align:center;margin-top:0.5rem;display:block;"><span class="glbl" style="white-space:normal;display:inline;">Drag to explore &middot; Click a light to discover</span></div>
 
 <div class="sp">
   <div class="sr" style="padding-top:1.29rem">
