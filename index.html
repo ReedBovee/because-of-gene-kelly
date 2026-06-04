@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- BOGK-v49-20260604034214-Tvu4juCP65cXcXPP9YKHxFAQ5V9UkJgUf411noZOu0FUHUQgbZkcTXGDL9Co1h9R5lNAedK8pnUhIXoF4sBc5GAmAfav6kHQCRfIDyIqbGp9Ie1BplgiUdPLA3edEFzYGkbhU2RIc7vTzYdmWOK17EthJAUkm0nq4mYeWaATI4sNib73QYbIztLf5mVAt9lSoseIRq6B -->
 <html>
 <head>
 <meta charset="UTF-8">
@@ -18,7 +17,7 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
 .hdr-ti{font-family:'Cinzel',serif;font-weight:400;color:var(--gold-light);letter-spacing:.07em;line-height:1.05;display:flex;flex-direction:column;align-items:center;text-align:center;margin:0}.hdr-ti .because{font-size:clamp(17.5px,3.25vw,30px);color:rgba(200,169,110,0.8);margin-bottom:.1em}.hdr-ti .genekelly{font-size:clamp(35px,6.5vw,65px);letter-spacing:.06em}
 .hdr-su{font-family:'Cinzel',serif;font-size:clamp(8px,1.4vw,12px);letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-top:.8rem}
 .hdr-ru{width:288px;height:.5px;background:rgba(200,169,110,0.375);margin:.8rem auto}
-.stage{display:block;padding:1.8rem 0 0;}
+.stage{display:flex;flex-direction:column;align-items:center;padding:1.8rem 0 0;}
 .gwrap{position:relative;width:45.9%;margin:0 auto;display:flex;flex-direction:column;align-items:center;}
 #gc{display:block;border-radius:50%;cursor:grab;width:100%;aspect-ratio:1/1;height:auto}
 #gc:active{cursor:grabbing}
@@ -131,7 +130,8 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
   #adminPanel{width:95%!important;max-height:85vh!important}
   .arow{padding:10px 8px!important;font-size:13px!important}
   #admCloseBtn,#admDelBtn,#admExportBtn,#admImportLabel{padding:8px 12px!important;font-size:10px!important}
-  .glbl{font-size:8px;letter-spacing:.08em;white-space:normal !important;text-align:center !important;width:100% !important;display:block !important;margin-left:0 !important;margin-right:0 !important;padding:0 !important;position:static !important}
+  .glbl{font-size:8px;letter-spacing:.08em;white-space:normal !important;}
+  #glblwrap{position:static;width:100%;text-align:center;display:block;}
   .row{flex-wrap:wrap}
   #sby{flex:1;min-width:120px}
   #sinp{flex:1;min-width:100px}
@@ -141,7 +141,7 @@ body{background:var(--charcoal);color:var(--white);font-family:'Raleway',sans-se
 <script>
 // Direct REST API calls to Supabase — no SDK needed
 const SB_URL = 'https://uqzlzkawghgkjsowqjnd.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxemx6a2F3Z2hna2pzb3dxam5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MzMwMDYsImV4cCI6MjA5NjAwOTAwNn0.PSEY932CTd_19F4LsWmf2rgPKLcjJCaSRDClDOIPgr4';
+const SB_KEY = 'sb_publishable_82l0PSdxy5LwxSm-GXt-6Q_ZTiAig1Z';
 
 function sbHeaders(){
   return {
@@ -164,7 +164,7 @@ async function loadFromSupabase(){
           first:v.first, last:v.last, city:v.city, state:v.state,
           country:v.country, passion:v.passion, middle:v.middle,
           lat:parseFloat(v.lat), lng:parseFloat(v.lng),
-          pi:v.pi, photoURL:v.photo_url||null, email:v.email, _sbid:v.id
+          pi:v.pi, photoURL:v.photo_url||null, email:v.email
         };
       });
       voices = [...SEED, ...remote];
@@ -191,23 +191,50 @@ async function saveToSupabase(v){
   } catch(e){ console.warn('Supabase save failed:', e.message||e); }
 }
 
-async function deleteFromSupabase(first, last, sbid){
+async function deleteFromSupabase(first, last){
   try{
-    const headers = Object.assign({}, sbHeaders(), {'Prefer': 'return=minimal'});
-    const url = sbid
-      ? SB_URL+'/rest/v1/voices?id=eq.'+encodeURIComponent(sbid)
-      : SB_URL+'/rest/v1/voices?first=eq.'+encodeURIComponent(first)+'&last=eq.'+encodeURIComponent(last);
-    const r = await fetch(url, { method:'DELETE', headers: headers });
-    if(!r.ok){
-      const txt = await r.text();
-      throw new Error('HTTP '+r.status+': '+txt);
-    }
-    console.log('Deleted from Supabase:', first, last, sbid||'by name');
+    const r = await fetch(SB_URL+'/rest/v1/voices?first=eq.'+encodeURIComponent(first)+'&last=eq.'+encodeURIComponent(last), {
+      method:'DELETE', headers: sbHeaders()
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
   } catch(e){ console.warn('Supabase delete failed:', e.message||e); }
 }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init("y4WzpOBnGHaKRVFE5");</script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<script>
+// EmailJS configuration
+(function(){ emailjs.init("y4WzpOBnGHaKRVFE5"); })();
+
+function sendThankYouEmail(first, email) {
+  if(!email) return; // skip if no email provided
+  emailjs.send('service_7rfvvkc', 'template_h9lfqys', {
+    first_name: first,
+    email: email,
+    to_email: email
+  }).then(function() {
+    console.log('Thank you email sent to', email);
+  }, function(error) {
+    console.warn('Email failed:', error);
+  });
+}
+
+function sendPatriciaEmail(first, last, city, country, passion, statement) {
+  emailjs.send('service_7rfvvkc', 'template_onk8wkl', {
+    first_name: first,
+    last_name: last,
+    city: city,
+    country: country,
+    passion: passion,
+    statement: statement,
+    to_email: 'patriciakelly@genekelly.com'
+  }).then(function() {
+    console.log('Patricia notified of new profile:', first, last);
+  }, function(error) {
+    console.warn('Patricia email failed:', error);
+  });
+}
+</script>
 </head>
 <body>
 <div class="pph-overlay" id="pph-overlay" onclick="if(_expandedClone){_expandedClone.remove();_expandedClone=null;this.classList.remove('active');}"></div>
@@ -226,8 +253,8 @@ async function deleteFromSupabase(first, last, sbid){
   <div class="gwrap">
     <div class="gr"></div><div class="gr gr2"></div>
     <canvas id="gc" width="420" height="420"></canvas>
-    <div class="glbl">Drag to explore &middot; Click a light to discover</div>
   </div>
+  <div id="glblwrap" style="width:100%;text-align:center;margin-top:0.5rem;display:block;"><span class="glbl" style="white-space:normal;display:inline;">Drag to explore &middot; Click a light to discover</span></div>
 </div>
 
 <div class="sp">
@@ -774,9 +801,39 @@ requestAnimationFrame(frame);
 canvas.addEventListener('mousedown',e=>{dragging=true;lastMX=e.clientX;velY=0;navTarget=null;navLight=-1;navArrived=false;navVel=0;pauseGlobe=false;});
 window.addEventListener('mouseup',()=>{dragging=false;if(Math.abs(velY)<0.002)velY=0.003;});
 window.addEventListener('mousemove',e=>{if(!dragging)return;velY=(e.clientX-lastMX)*0.009;if(velY>0.022)velY=0.022;if(velY<-0.022)velY=-0.022;rotY+=velY;lastMX=e.clientX;});
-canvas.addEventListener('touchstart',e=>{dragging=true;lastMX=e.touches[0].clientX;velY=0;navTarget=null;navLight=-1;navArrived=false;navVel=0;pauseGlobe=false;e.preventDefault();},{passive:false});
-window.addEventListener('touchend',()=>{dragging=false;if(Math.abs(velY)<0.002)velY=0.003;});
-window.addEventListener('touchmove',e=>{if(!dragging)return;velY=(e.touches[0].clientX-lastMX)*0.009;if(velY>0.022)velY=0.022;if(velY<-0.022)velY=-0.022;rotY+=velY;lastMX=e.touches[0].clientX;e.preventDefault();},{passive:false});
+let _touchStartX=0,_touchStartY=0,_touchMoved=false;
+canvas.addEventListener('touchstart',e=>{
+  dragging=true;_touchMoved=false;
+  lastMX=e.touches[0].clientX;
+  _touchStartX=e.touches[0].clientX;
+  _touchStartY=e.touches[0].clientY;
+  velY=0;navTarget=null;navLight=-1;navArrived=false;navVel=0;pauseGlobe=false;
+  e.preventDefault();
+},{passive:false});
+window.addEventListener('touchend',e=>{
+  dragging=false;
+  if(Math.abs(velY)<0.002)velY=0.003;
+  if(!_touchMoved && e.changedTouches.length>0){
+    const tx=e.changedTouches[0].clientX,ty=e.changedTouches[0].clientY;
+    const rect=canvas.getBoundingClientRect();
+    // Only process taps that land on the canvas
+    if(tx>=rect.left&&tx<=rect.right&&ty>=rect.top&&ty<=rect.bottom){
+      const scaleX=canvas.width/rect.width;
+      const scaleY=canvas.height/rect.height;
+      const mx=(tx-rect.left)*scaleX,my=(ty-rect.top)*scaleY;
+      let closest=-1,bestDist=999999;
+      for(let i=0;i<voices.length;i++){
+        const v=voices[i];const{x,y,z}=ll2xyz(v.lat,v.lng);
+        if(z<0.06)continue;const p=proj(x,y,z);
+        const d=Math.hypot(p.px-mx,p.py-my);
+        if(d<bestDist){bestDist=d;closest=i;}
+      }
+      // Open nearest light if within 150px canvas units
+      if(closest>=0 && bestDist<150)showPop(closest);
+    }
+  }
+});
+window.addEventListener('touchmove',e=>{if(!dragging)return;_touchMoved=true;velY=(e.touches[0].clientX-lastMX)*0.009;if(velY>0.022)velY=0.022;if(velY<-0.022)velY=-0.022;rotY+=velY;lastMX=e.touches[0].clientX;e.preventDefault();},{passive:false});
 
 canvas.addEventListener('click',e=>{
   const rect=canvas.getBoundingClientRect();
@@ -1166,29 +1223,8 @@ document.getElementById('subb').onclick=async()=>{
   const nv={first,last,city,state,country,passion,middle,lat:coords[0],lng:coords[1],pi:first[0]+last[0],photoURL};
   voices.push(nv);
   saveToSupabase(nv); // Save to Supabase cloud
-
-  // Send thank-you email to submitter
-  if(nv.email){
-    emailjs.send('service_7rfvvkc', 'template_h9lfqys', {
-      first_name: nv.first,
-      last_name: nv.last,
-      city: nv.city,
-      country: nv.country,
-      to_email: nv.email
-    }).catch(function(e){ console.warn('Thank-you email failed:', e); });
-  }
-
-  // Send notification email to Patricia
-  emailjs.send('service_7rfvvkc', 'template_onk8wkl', {
-    first_name: nv.first,
-    last_name: nv.last,
-    city: nv.city,
-    state: nv.state || '',
-    country: nv.country,
-    passion: nv.passion || '',
-    statement: nv.middle || '',
-    photo_url: nv.photoURL || ''
-  }).catch(function(e){ console.warn('Patricia notification failed:', e); });
+  sendThankYouEmail(first, email); // Send thank-you email to visitor
+  sendPatriciaEmail(first, last, city, country, passion, middle); // Notify Patricia
   // Save photo to IndexedDB separately, don't bloat localStorage
   if(photoURL){
     savePhoto(photoKey(nv), photoURL).catch(e=>console.warn('Photo save failed:',e));
@@ -1358,27 +1394,17 @@ function admClose(){
   _admSel = null;
 }
 
-async function admDel(){
+function admDel(){
   if(_admSel === null){ alert('Please select a profile first'); return; }
   var i = _admSel;
   if(i < 0 || i >= voices.length) return;
   if(SEED.some(function(s){ return s.first===voices[i].first && s.last===voices[i].last; })) return;
   var delVoice = voices[i];
-  await deleteFromSupabase(delVoice.first, delVoice.last, delVoice._sbid); // Delete from cloud
   deletePhoto(photoKey(delVoice));
   voices.splice(i, 1);
   saveVoices();
   updateStats();
-  _admSel = null;
   admBuild();
-  // Show toast confirmation
-  var toast = document.getElementById('toast');
-  var tbd = document.getElementById('tbd');
-  if(toast && tbd){
-    tbd.textContent = 'Profile deleted successfully.';
-    toast.style.display = 'flex';
-    setTimeout(function(){ toast.style.display = 'none'; }, 3000);
-  }
 }
 
 window.addEventListener('load', function(){
