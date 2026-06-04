@@ -639,11 +639,11 @@ function ll2xyz(lat,lng){
   const wz=Math.sin(phi)*Math.sin(lngRad);
   // Apply inverse of GLSL rotation (M^T where M uses cos(-rotY),sin(-rotY))
   // cy=cos(-rotY), sy=sin(-rotY)
-  const cy=Math.cos(-rotY),sy=Math.sin(-rotY);
-  // screen_x = cy*wx - sy*wz
+  const cy=Math.cos(rotY),sy=Math.sin(rotY);
+  // screen_x = cy*wx + sy*wz
   // screen_y = wy
-  // screen_z = sy*wx + cy*wz  (positive = front/visible)
-  return{x:cy*wx-sy*wz, y:wy, z:sy*wx+cy*wz};
+  // screen_z = -sy*wx + cy*wz  (positive = front/visible)
+  return{x:cy*wx+sy*wz, y:wy, z:-sy*wx+cy*wz};
 }
 function proj(x,y,z){return{px:CX+x*R,py:CY-y*R};}
 
