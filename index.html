@@ -473,7 +473,7 @@ void main(){
   vec3 Nw=vec3(cy*uv.x+sy*dz, uv.y, -sy*uv.x+cy*dz);
 
   // Sample land texture — equirectangular UV from sphere normal
-  float lng=atan(Nw.z, Nw.x);   // actual longitude via standard atan2(z,x)
+  float lng=atan(-Nw.z, Nw.x);  // longitude; -z so east runs rightward (geographically correct, un-mirrored)
   float lat=asin(clamp(Nw.y,-1.,1.)); // -PI/2..PI/2
   float texU=(lng+PI)/(2.*PI);     // standard equirect mapping
   float texV=0.5-lat/PI;
@@ -636,7 +636,7 @@ function ll2xyz(lat,lng){
   const lngRad=lng*Math.PI/180;
   const wx=Math.sin(phi)*Math.cos(lngRad);
   const wy=Math.cos(phi);
-  const wz=Math.sin(phi)*Math.sin(lngRad);
+  const wz=-Math.sin(phi)*Math.sin(lngRad); // -sin: matches shader's atan(-Nw.z,Nw.x) convention
   // Apply inverse of GLSL rotation (M^T where M uses cos(-rotY),sin(-rotY))
   // cy=cos(-rotY), sy=sin(-rotY)
   const cy=Math.cos(rotY),sy=Math.sin(rotY);
@@ -704,7 +704,7 @@ function frame(ts){
     const th=(v.lng*Math.PI/180);
     ldata[i*3]=Math.sin(phi)*Math.cos(th);
     ldata[i*3+1]=Math.cos(phi);
-    ldata[i*3+2]=Math.sin(phi)*Math.sin(th);
+    ldata[i*3+2]=-Math.sin(phi)*Math.sin(th); // -sin: same convention as ll2xyz/shader
   }
   gl.uniform3fv(uLights,ldata);
   gl.uniform1i(uLightCount,cnt);
@@ -793,6 +793,7 @@ function frame(ts){
       oc.fillStyle=`rgba(255,220,100,${0.9*edgeFade})`;oc.fill();
     }
   }
+
 
   ft++;requestAnimationFrame(frame);
 }
@@ -940,7 +941,7 @@ function showPop(i){
     },0);
   }
   // Spin globe to face this person (shortest arc)
-  const targetRotY=v.lng*Math.PI/180 - Math.PI/2;
+  const targetRotY=-v.lng*Math.PI/180 - Math.PI/2; // centers lng L when rotY = -L - 90deg
   const diff=((targetRotY-rotY+Math.PI*3)%(Math.PI*2))-Math.PI;
   rotY+=diff;
   velY=0;
@@ -1024,9 +1025,8 @@ function navigateTo(idx){
   selLight=null;
   pauseGlobe=false;
   if(pauseTimer)clearTimeout(pauseTimer);
-  // Derived from shader math: front-center when rotY = PI/2 - lngRad
-  const lngRad=(v.lng+39)*Math.PI/180;  // +39 matches ll2xyz offset
-  const target=lngRad-Math.PI/2;
+  // Centers longitude L on screen when rotY = -L - PI/2 (verified empirically)
+  const target=-v.lng*Math.PI/180 - Math.PI/2;
   const current=rotY;
   // Shortest angular path
   let dist=((target-current)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
