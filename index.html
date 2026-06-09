@@ -228,6 +228,7 @@ function sendPatriciaEmail(first, last, city, state, country, passion, statement
     country: country,
     passion: passion,                          // influence category (Dance, Film, ...)
     statement: statement,                      // the visitor's written response
+    photo_url: '',                             // template references {{photo_url}}; send empty so it is never "missing"
     email: 'patriciakelly@genekelly.com',
     to_email: 'patriciakelly@genekelly.com'
   }).then(function() {
