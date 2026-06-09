@@ -219,17 +219,17 @@ function sendThankYouEmail(first, email) {
   });
 }
 
-function sendPatriciaEmail(first, last, city, state, country, passion) {
+function sendPatriciaEmail(first, last, city, state, country, passion, statement) {
   emailjs.send('service_7rfvvkc', 'template_onk8wkl', {
     first_name: first,
     last_name: last,
     city: city,
     state: state,
     country: country,
-    passion: passion,
-    PASSION: passion,                          // cover upper- or lower-case template variable
-    email: 'patriciakelly@genekelly.com',      // matches template To Email if set to {{email}}
-    to_email: 'patriciakelly@genekelly.com'    // matches template To Email if set to {{to_email}}
+    passion: passion,                          // influence category (Dance, Film, ...)
+    statement: statement,                      // the visitor's written response
+    email: 'patriciakelly@genekelly.com',
+    to_email: 'patriciakelly@genekelly.com'
   }).then(function() {
     console.log('Patricia notified of new profile:', first, last);
   }, function(error) {
@@ -1227,7 +1227,7 @@ document.getElementById('subb').onclick=async()=>{
   voices.push(nv);
   saveToSupabase(nv); // Save to Supabase cloud
   sendThankYouEmail(first, email); // Send thank-you email to visitor
-  sendPatriciaEmail(first, last, city, state, country, passion); // Notify Patricia
+  sendPatriciaEmail(first, last, city, state, country, passion, middle); // Notify Patricia (middle = written statement)
   // Save photo to IndexedDB separately, don't bloat localStorage
   if(photoURL){
     savePhoto(photoKey(nv), photoURL).catch(e=>console.warn('Photo save failed:',e));
