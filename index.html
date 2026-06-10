@@ -153,7 +153,7 @@ function sbHeaders(){
 
 async function loadFromSupabase(){
   try{
-    const r = await fetch(SB_URL+'/rest/v1/voices?select=*&order=created_at.asc', {
+    const r = await fetch(SB_URL+'/rest/v1/voices?select=&order=created_at.asc', {
       method:'GET', headers: sbHeaders()
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
