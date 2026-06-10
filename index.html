@@ -1106,18 +1106,19 @@ function navigateTo(idx){
 }
 function countryKey(c){
   if(!c) return '';
-  var k=(''+c).trim().toLowerCase().replace(/\./g,'').replace(/\s+/g,' ');
-  if(!k) return '';
-  var A={
-    'us':'united states','usa':'united states','u s a':'united states','u s':'united states',
-    'america':'united states','united states of america':'united states','the united states':'united states',
-    'united states america':'united states','states':'united states',
-    'uk':'united kingdom','u k':'united kingdom','england':'united kingdom','britain':'united kingdom',
-    'great britain':'united kingdom','scotland':'united kingdom','wales':'united kingdom','northern ireland':'united kingdom',
-    'holland':'netherlands','the netherlands':'netherlands',
-    'uae':'united arab emirates','u a e':'united arab emirates'
-  };
-  return A[k]||k;
+  var raw=(''+c).trim().toLowerCase();
+  if(!raw) return '';
+  // Reduce to letters only so spacing/punctuation variants collapse:
+  // "U.S.A.", "U S A", "u.s.a", "United  States" all normalize to the same thing.
+  var bare=raw.replace(/[^a-z]/g,'');
+  // United States -- match any common description
+  if(/^(us|usa|usofa|theus|theusa|america|states|unitedstates.*|theunitedstates.*)$/.test(bare)) return 'united states';
+  // United Kingdom
+  if(/^(uk|gb|theuk|britain|greatbritain|england|scotland|wales|northernireland|unitedkingdom.*|theunitedkingdom.*)$/.test(bare)) return 'united kingdom';
+  if(/^(holland|thenetherlands|netherlands)$/.test(bare)) return 'netherlands';
+  if(/^(uae|unitedarabemirates)$/.test(bare)) return 'united arab emirates';
+  // Everything else: normalized form so genuinely different countries stay distinct
+  return raw.replace(/\./g,'').replace(/\s+/g,' ');
 }
 function updateStats(){
   document.getElementById('cnt').textContent=voices.length;
