@@ -756,7 +756,7 @@ function frame(ts){
   const sunTheta=Math.atan2(SUN[0]/SL,SUN[2]/SL)-rotY; // sun lng in globe frame
 
   // Registered location lights — steady gold point of light at each person's location
-  for(let i=0;i<Math.min(voices.length,60);i++){
+  for(let i=0;i<voices.length;i++){
     const v=voices[i];
     const{x,y,z}=ll2xyz(v.lat,v.lng);
     if(z<0.06)continue;
@@ -1104,9 +1104,24 @@ function navigateTo(idx){
   navTarget=rotY+dist;
   navLight=idx;
 }
+function countryKey(c){
+  if(!c) return '';
+  var k=(''+c).trim().toLowerCase().replace(/\./g,'').replace(/\s+/g,' ');
+  if(!k) return '';
+  var A={
+    'us':'united states','usa':'united states','u s a':'united states','u s':'united states',
+    'america':'united states','united states of america':'united states','the united states':'united states',
+    'united states america':'united states','states':'united states',
+    'uk':'united kingdom','u k':'united kingdom','england':'united kingdom','britain':'united kingdom',
+    'great britain':'united kingdom','scotland':'united kingdom','wales':'united kingdom','northern ireland':'united kingdom',
+    'holland':'netherlands','the netherlands':'netherlands',
+    'uae':'united arab emirates','u a e':'united arab emirates'
+  };
+  return A[k]||k;
+}
 function updateStats(){
   document.getElementById('cnt').textContent=voices.length;
-  document.getElementById('ctr').textContent=new Set(voices.map(v=>v.country)).size;
+  document.getElementById('ctr').textContent=new Set(voices.map(v=>countryKey(v.country)).filter(Boolean)).size;
 }
 updateStats();
 
